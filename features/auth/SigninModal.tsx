@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import Button from "components/common/Button";
 import TextField from "components/common/TextField";
 
-import API from "apis/ API";
+import API from "apis/API";
 
 interface Props {
   handleClose: () => void;
