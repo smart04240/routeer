@@ -36,8 +36,6 @@ const Header = () => {
     setIsShowResetPasswordModal(true);
   };
 
-  console.log(authenticatedUserInfo);
-
   return (
     <>
       <div className="fixed z-50 bg-white w-full h-[65px] shadow-dark">

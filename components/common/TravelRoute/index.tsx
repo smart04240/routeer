@@ -1,8 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import useGoogle from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import Link from "next/link";
 import Button from "components/common/Button";
 import TextField from "components/common/TextField";
 import Tag from "./Tag";
+import PlacePredict from "../PlacePredict";
 
 interface Props {
   isResearch?: boolean;
@@ -36,6 +38,27 @@ const TravelRoute: FC<Props> = (props) => {
 
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const {
+    placePredictions: fromPlacePredictions,
+    getPlacePredictions: getFromplacePredictions,
+    isPlacePredictionsLoading: isFromPlacePredictionsLoading,
+  } = useGoogle({
+    apiKey: process.env.GOOGLE_API_KEY,
+  });
+  const {
+    placePredictions: toPlacePredictions,
+    getPlacePredictions: getToPlacePredictions,
+    isPlacePredictionsLoading: isToPlacePredictionsLoading,
+  } = useGoogle({
+    apiKey: process.env.GOOGLE_API_KEY,
+  });
+
+  const fromClick = (place) => {
+    setFrom(place);
+  };
+  const toClick = (place) => {
+    setTo(place);
+  };
 
   return (
     <div className="px-4 pt-8 pb-5 tablet:p-6 tablet:pb-8 rounded-[20px] bg-[#F2F2F290]">
@@ -52,23 +75,45 @@ const TravelRoute: FC<Props> = (props) => {
             }`}
           >
             <div className="w-full flex flex-col tablet:flex-row items-center mb-5 relative">
-              <TextField
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-                placeholder={props.fromLabel}
-                className="w-full tablet:w-[275px] desktop:w-[307px] mb-3 tablet:mb-0"
-                icon={<img src="/images/icons/from_marker.svg" />}
-              />
+              <div className="relative">
+                <TextField
+                  value={from}
+                  onChange={(evt) => {
+                    getFromplacePredictions({ input: evt.target.value });
+                    setFrom(evt.target.value);
+                  }}
+                  placeholder={props.fromLabel}
+                  className="w-full tablet:w-[275px] desktop:w-[307px] mb-3 tablet:mb-0"
+                  icon={<img src="/images/icons/from_marker.svg" />}
+                />
+                {!isFromPlacePredictionsLoading && (
+                  <PlacePredict
+                    data={fromPlacePredictions}
+                    onClick={fromClick}
+                  />
+                )}
+              </div>
               <Button className="flex-shrink-0 tablet:mx-2.5 w-[30px] h-[30px] rounded-full shadow-theme border border-hotpink bg-light -translate-x-1/2 -translate-y-1/2 rotate-90 tablet:transform-none absolute tablet:relative top-1/2 left-1/2 tablet:inset-0">
                 <img src="/images/icons/swap.svg" alt="" />
               </Button>
-              <TextField
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                placeholder={props.toLabel}
-                className="w-full tablet:w-[275px] desktop:w-[307px]"
-                icon={<img src="/images/icons/to_marker.svg" />}
-              />
+              <div className="relative">
+                <TextField
+                  value={to}
+                  onChange={(evt) => {
+                    getToPlacePredictions({ input: evt.target.value });
+                    setTo(evt.target.value);
+                  }}
+                  placeholder={props.toLabel}
+                  className="w-full tablet:w-[275px] desktop:w-[307px]"
+                  icon={<img src="/images/icons/to_marker.svg" />}
+                />
+                {!isToPlacePredictionsLoading && (
+                  <PlacePredict
+                    data={toPlacePredictions}
+                    onClick={toClick}
+                  />
+                )}
+              </div>
             </div>
             <div className="flex flex-col tablet:flex-row items-center">
               <div className="flex flex-col tablet:flex-row">

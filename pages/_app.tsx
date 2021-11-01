@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { createWrapper } from "next-redux-wrapper";
-import { initStore } from "store";
+import initStore from "store";
 import Loading from "components/layout/Loading";
 import "tailwindcss/tailwind.css";
 import "styles/global.css";

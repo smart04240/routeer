@@ -9,6 +9,7 @@ interface Props {
   icon?: React.ReactNode;
   className?: string;
   defaultValue?: string;
+  locationRef?: React.RefObject<HTMLInputElement>;
   onChange?: (event: any) => void;
 }
 
@@ -40,6 +41,8 @@ const TextField: FC<Props> = (props) => {
         ) : (
           <input
             type={props.type}
+            ref={props.locationRef}
+            value={props.value}
             onChange={handleChange}
             placeholder={props.placeholder}
             defaultValue={props.defaultValue}
